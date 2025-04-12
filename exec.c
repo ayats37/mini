@@ -102,13 +102,14 @@ int ft_echo(t_lexer *lexer, t_env *env_list)
                 var_value = get_env_value(var, env_list);
                 if (var_value != NULL)
                     printf("%s", var_value);
-                // printf("%s", &string->value[i]);
+                printf("%s", &string->value[i]);
                 free(var);
             }
             else
             {
                 var_value = get_env_value(string->value + 1, env_list);
-                printf("%s", var_value);
+                if (var_value)
+                    printf("%s", var_value);
             }
         }
         else
