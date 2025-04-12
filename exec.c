@@ -211,20 +211,20 @@ int ft_exit(t_lexer *lexer)
 {
     t_token *arg;
     int exit_status = 0;
-    // t_env *current = env_list;
+    t_env *current = env_list;
     
     arg = get_next_token(lexer);
     if (arg)
         exit_status = atoi(arg->value);
-    // while (current)
-    // {
-    //     free(current->name);
-    //     free(current->value);
-    //     free(current);
-    //     current = current->next;
-    // }
-    // free(lexer->input);
-    // free(lexer);
+    while (current)
+    {
+        free(current->name);
+        free(current->value);
+        free(current);
+        current = current->next;
+    }
+    free(lexer->input);
+    free(lexer);
     printf("exit\n");
     exit(exit_status);
     return (0);
