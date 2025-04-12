@@ -39,21 +39,6 @@ void add_to_env_list(t_env **head, t_env *new_node)
     }
 }
 
-// int    ft_cd(t_token *path, t_lexer *lexer)
-// {
-//     path = get_next_token(lexer);
-//     if (!path)
-//     {
-//         chdir("/Home");
-//         return (0);
-//     }
-//   if (chdir(path->value) != 0)
-//   {
-//     printf("cd: %s: No such file or directory\n", path->value);
-//     return (1);
-//   }
-//   return (0);
-// }
 int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list)
 {
     path = get_next_token(lexer);
@@ -65,12 +50,12 @@ int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list)
             home_dir = getenv("HOME");
         if (!home_dir || !*home_dir)
         {
-            printf(stderr, "cd: HOME not set\n");
+            printf("cd: HOME not set\n");
             return (1);
         }
         if (chdir(home_dir) != 0)
         {
-            printf(stderr, "cd: %s: No such file or directory\n", home_dir);
+            printf("cd: %s: No such file or directory\n", home_dir);
             return (1);
         }
     }
@@ -78,7 +63,7 @@ int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list)
     {
         if (chdir(path->value) != 0)
         {
-            printf(stderr, "cd: %s: No such file or directory\n", path->value);
+            printf("cd: %s: No such file or directory\n", path->value);
             return (1);
         }
     }
@@ -118,7 +103,7 @@ int ft_echo(t_lexer *lexer, t_env *env_list)
                 int start = i + 1;
                 int end = start;
                 
-                while (str[end] && (isalnum(str[end]) || str[end] == '_'))
+                while (str[end])
                     end++;
                 if (end > start)
                 {
@@ -163,6 +148,8 @@ int ft_export(t_token *input, t_lexer *lexer, t_env **env_list)
    char *value;
    input = get_next_token(lexer);
 
+   if (!input || !input->value)
+    return(1);
    equal_sign = ft_strchr(input->value, '=');
    if (!equal_sign)
         return(1);
@@ -274,17 +261,17 @@ int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist)
 {
     if (strcmp(token->value, "echo") == 0)
         ft_echo(lexer, *envlist);
-    if (strcmp(token->value, "cd") == 0)
+    else if (strcmp(token->value, "cd") == 0)
         return(ft_cd(token, lexer, *envlist));
-    if (strcmp(token->value, "pwd") == 0)
+    else if (strcmp(token->value, "pwd") == 0)
         return(ft_pwd());
-    if (strcmp(token->value, "export") == 0)
+    else if (strcmp(token->value, "export") == 0)
         return(ft_export(token, lexer, envlist));
-    if (strcmp(token->value, "unset") == 0)
+    else if (strcmp(token->value, "unset") == 0)
         return(ft_unset(lexer, envlist));
-    if (strcmp(token->value, "env") == 0)
+    else if (strcmp(token->value, "env") == 0)
         return(ft_env(*envlist));
-    if (strcmp(token->value, "exit") == 0)
+    else if (strcmp(token->value, "exit") == 0)
         return(ft_exit(lexer));
     return (0);
 }
@@ -305,6 +292,18 @@ t_env *init_env(char **envp)
     }
     return (head); 
 }
+// int handle_variable(t_token *token, t_lexer *lexer, t_env *env_list)
+// {
+//     while (token)
+//     {
+//         char *str = token->value;
+//         int i = 0;
+//         while (str[i])
+//         {
+//             if (str[i] == '$')
+//         }
+//     }
+// }
 
 int	main(int argc, char **argv, char **env)
 {
@@ -318,15 +317,20 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		input = readline("minishell> ");
-		lexer = initialize_lexer(input);
-		while (lexer->position < lexer->lenght)
-		{
-			token = get_next_token(lexer);
-			if (!token->value)
-				return (0);
-			token->type = token_type(token);
-			execute_builtin(token, lexer, &envlist);
-		}
+        if (input)
+        {
+            add_history(input); 
+            lexer = initialize_lexer(input);
+            while (lexer->position < lexer->lenght)
+            {
+                token = get_next_token(lexer);
+                if (!token->value)
+                    return (0);
+                token->type = token_type(token);
+                execute_builtin(token, lexer, &envlist);
+            }
+            free(input);
+        }
 	}
 	return (0);
 }
