@@ -39,21 +39,53 @@ void add_to_env_list(t_env **head, t_env *new_node)
     }
 }
 
-int    ft_cd(t_token *path, t_lexer *lexer)
+// int    ft_cd(t_token *path, t_lexer *lexer)
+// {
+//     path = get_next_token(lexer);
+//     if (!path)
+//     {
+//         chdir("/Home");
+//         return (0);
+//     }
+//   if (chdir(path->value) != 0)
+//   {
+//     printf("cd: %s: No such file or directory\n", path->value);
+//     return (1);
+//   }
+//   return (0);
+// }
+int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list)
 {
     path = get_next_token(lexer);
+    
     if (!path)
     {
-        chdir("/Home");
-        return (0);
+        char *home_dir = get_env_value("HOME", env_list);
+        if (!home_dir || !*home_dir)
+            home_dir = getenv("HOME");
+        if (!home_dir || !*home_dir)
+        {
+            printf(stderr, "cd: HOME not set\n");
+            return (1);
+        }
+        if (chdir(home_dir) != 0)
+        {
+            printf(stderr, "cd: %s: No such file or directory\n", home_dir);
+            return (1);
+        }
     }
-  if (chdir(path->value) != 0)
-  {
-    printf("cd: %s: No such file or directory\n", path->value);
-    return (1);
-  }
-  return (0);
+    else
+    {
+        if (chdir(path->value) != 0)
+        {
+            printf(stderr, "cd: %s: No such file or directory\n", path->value);
+            return (1);
+        }
+    }
+    
+    return (0);
 }
+
 int ft_pwd()
 {
     char cwd[10240];
@@ -67,63 +99,61 @@ int ft_pwd()
 }
 int ft_echo(t_lexer *lexer, t_env *env_list)
 {
-    int new_line;
-    char *var_value;
-    char *var;
-    int i;
-    int j;
+    int new_line = 1;
+    t_token *token = get_next_token(lexer);
 
-    new_line = 1;
-    t_token *string = get_next_token(lexer);
-    if (string && (strcmp(string->value, "-n") == 0))
+    if (token && strcmp(token->value, "-n") == 0)
     {
         new_line = 0;
-        string  = get_next_token(lexer);
+        token = get_next_token(lexer);
     }
-    while (string) 
+    while (token)
     {
-        if (string)
+        char *str = token->value;
+        int i = 0;
+        while (str[i])
         {
-            i = 1;
-            while ( string->value[i] && string->value[i] != '$')
-                i++;
-            if (string->value[i] == '$')
+            if (str[i] == '$')
             {
-                var = malloc(sizeof(char) * (i + 1));
-                if (!var)
-                    return(1);
-                j = 1;
-                while (j < i)
+                int start = i + 1;
+                int end = start;
+                
+                while (str[end] && (isalnum(str[end]) || str[end] == '_'))
+                    end++;
+                if (end > start)
                 {
-                    var[j - 1] = string->value[j]; 
-                    j++;
+                    int var_len = end - start;
+                    char *var = malloc(sizeof(char) * (var_len + 1));
+                    if (!var)
+                        return 1;
+                    strncpy(var, &str[start], var_len);
+                    var[var_len] = '\0';
+                    char *var_value = get_env_value(var, env_list);
+                    if (var_value)
+                        printf("%s", var_value);
+                    free(var);
+                    
+                    i = end;
                 }
-                var[j - 1] = '\0';
-                var_value = get_env_value(var, env_list);
-                if (var_value != NULL)
-                    printf("%s", var_value);
-                printf("%s", &string->value[i]);
-                free(var);
+                else
+                {
+                    printf("$");
+                    i++;
+                }
             }
             else
             {
-                var_value = get_env_value(string->value + 1, env_list);
-                if (var_value)
-                    printf("%s", var_value);
+                printf("%c", str[i]);
+                i++;
             }
         }
-        else
-            printf("%s", string->value);
-        string = get_next_token(lexer);
-        // printf("value =%s\n", string->value);
-        // printf("type = %d\n", string->type);
-        if (string)
+        token = get_next_token(lexer);
+        if (token)
             printf(" ");
     }
     if (new_line)
-        printf("\n");
-    return (0);
-       
+        printf("\n");   
+    return 0;
 }
 
 int ft_export(t_token *input, t_lexer *lexer, t_env **env_list)
@@ -245,7 +275,7 @@ int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist)
     if (strcmp(token->value, "echo") == 0)
         ft_echo(lexer, *envlist);
     if (strcmp(token->value, "cd") == 0)
-        return(ft_cd(token, lexer));
+        return(ft_cd(token, lexer, *envlist));
     if (strcmp(token->value, "pwd") == 0)
         return(ft_pwd());
     if (strcmp(token->value, "export") == 0)
