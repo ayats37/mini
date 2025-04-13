@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 15:24:04 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/12 12:33:53 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 19:43:39 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,27 +235,27 @@ void enqueue(t_queue *queue, t_token *token)
     }
 }
 
-// int	main(int argc, char **argv)
-// {
-// 	char	*input;
-// 	t_lexer	*lexer;
-// 	t_token	*token;
+int	main(int argc, char **argv)
+{
+	char	*input;
+	t_lexer	*lexer;
+	t_token	*token;
 
-// 	(void)argc;
-// 	(void)argv;
-// 	while (1)
-// 	{
-// 		input = readline("minishell> ");
-// 		lexer = initialize_lexer(input);
-// 		while (lexer->position < lexer->lenght)
-// 		{
-// 			token = get_next_token(lexer);
-// 			if (!token)
-// 				continue;
-// 			token->type = token_type(token);
-// 			printf("token->value = %s			token->type = %d\n", token->value, token->type);
-// 			// token->prece = precedence_type(token);
-// 		}
-// 	}
-// 	return (0);
-// }
+	(void)argc;
+	(void)argv;
+	while (1)
+	{
+		input = readline("minishell> ");
+		lexer = initialize_lexer(input);
+		while (lexer->position < lexer->lenght)
+		{
+			token = get_next_token(lexer);
+			if (!token)
+				continue;
+			token->type = token_type(token);
+			printf("token->value = %s			token->type = %d\n", token->value, token->type);
+			// token->prece = precedence_type(token);
+		}
+	}
+	return (0);
+}

@@ -6,26 +6,26 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/13 17:30:58 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 19:53:17 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_echo(t_lexer *lexer, t_env *env_list)
+int ft_echo(t_token *token_list, t_env *env_list)
 {
     int new_line;
-    t_token *token;
     char *str;
     int i;
     int offset;
+    t_token *token =token_list;
 
     new_line = 1;
-    token = get_next_token(lexer);
+    token = token->next;
     if (token && strcmp(token->value, "-n") == 0)
     {
         new_line = 0;
-        token = get_next_token(lexer);
+        token = token->next;
     }
     while (token)
     {
@@ -44,7 +44,7 @@ int ft_echo(t_lexer *lexer, t_env *env_list)
                 i++;
             }
         }
-        token = get_next_token(lexer);
+        token = token->next;
         if (token)
             printf(" ");
     }
@@ -53,13 +53,14 @@ int ft_echo(t_lexer *lexer, t_env *env_list)
     return (0);
 }
 
-int ft_export(t_token *input, t_lexer *lexer, t_env **env_list)
+int ft_export(t_token *token, t_env **env_list)
 {
+    t_token *input = token;
    char *equal_sign;
    char *name;
    char *value;
    
-   input = get_next_token(lexer);
+   input = input->next;
    if (!input || !input->value)
     return(1);
    equal_sign = ft_strchr(input->value, '=');
@@ -85,15 +86,15 @@ int ft_env(t_env *env_list)
     return(0);
 }
 
-int ft_exit(t_lexer *lexer, t_env *env_list)
+int ft_exit(t_token *token, t_env *env_list)
 {
-    t_token *arg;
+    t_token *arg = token;
     int exit_status;
     t_env *current;
     
     current = env_list;
     exit_status = 0;
-    arg = get_next_token(lexer);
+    arg = arg->next;
     if (arg)
         exit_status = atoi(arg->value);
     while (current)
@@ -103,20 +104,18 @@ int ft_exit(t_lexer *lexer, t_env *env_list)
         free(current);
         current = current->next;
     }
-    free(lexer->input);
-    free(lexer);
     printf("exit\n");
     exit(exit_status);
     return (0);
 }
 
-int ft_unset(t_lexer *lexer, t_env **env_list)
+int ft_unset(t_token *token, t_env **env_list)
 {
-    t_token *var;
+    t_token *var = token;
     t_env *current = *env_list;
     t_env *prev = NULL;
 
-    var = get_next_token(lexer);
+    var = var->next;
     if (!var || !var->value)
         return (1);
     while(current)
@@ -138,11 +137,14 @@ int ft_unset(t_lexer *lexer, t_env **env_list)
     return(1);
 }
 
-int ft_cd(t_token *path, t_lexer *lexer)
+int ft_cd(t_token *token)
 {
+    t_token *path = token;
     char *home_dir;
+    // (void)lexer;
     
-    path = get_next_token(lexer);
+    // path = get_next_token(lexer);
+    path = path->next;
     if (!path)
     {
         home_dir = getenv("HOME");

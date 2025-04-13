@@ -10,20 +10,20 @@ void write_split(char **split)
 	}
 }
 
-int calculate_cmd_nbr(t_token *token)
-{
-    int count = 1; 
+// int calculate_cmd_nbr(t_token *token)
+// {
+//     int count = 1; 
     
-    while (token)
-    {
-        while(token->value)
-        {
-            if(token->type == 1)
-                count++;
-        }
-    }
-    return (count);
-}
+//     while (token)
+//     {
+//         while(token->value)
+//         {
+//             if(token->type == 1)
+//                 count++;
+//         }
+//     }
+//     return (count);
+// }
 
 
 void execute_one(char *input, t_data *data)

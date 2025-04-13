@@ -6,21 +6,21 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 12:07:43 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/13 17:54:10 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 20:01:57 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_linked_list(t_token *token_list)
-{
-	t_token *current = token_list;
-	while (current)
-	{
-		printf("token->value = %s		token->type = %d\n", current->value, current->type);
-		current = current->next;
-	}
-}
+// void	print_linked_list(t_token *token_list)
+// {
+// 	t_token *current = token_list;
+// 	while (current)
+// 	{
+// 		printf("token->value = %s		token->type = %d			token->has_space = %d\n", current->value, current->type, current->has_space);
+// 		current = current->next;
+// 	}
+// }
 
 t_lexer	*initialize_lexer(char *input)
 {
@@ -50,7 +50,7 @@ void	skip_whitespace(t_lexer *lexer)
 		lexer->position++;
 }
 
-t_token	*create_token(char *value, char quote)
+t_token	*create_token(char *value, char quote, int has_space)
 {
 	t_token	*token;
 
@@ -66,6 +66,8 @@ t_token	*create_token(char *value, char quote)
 		token->type = 3;
 	else if (quote == '"')
 		token->type = 4;
+	token->has_space = has_space;
+	// printf("has_space = %d\n", token->has_space);
 	return (token);
 }
 
@@ -88,7 +90,9 @@ t_token	*handle_quote(t_lexer *lexer, char quote)
 	lenght = lexer->position - start;
 	value = ft_substr(lexer->input, start, lenght);
 	lexer->position += 1;
-	return (create_token(value, quote));
+	if (lexer->input[lexer->position] == 32)
+		return (create_token(value, quote, 1));
+	return (create_token(value, quote, 0));
 }
 
 t_token	*handle_operations(t_lexer *lexer, char *oper, int i)
@@ -100,7 +104,9 @@ t_token	*handle_operations(t_lexer *lexer, char *oper, int i)
 		return (NULL);
 	str[i] = '\0';
 	lexer->position += i;
-	return (create_token(str, str[0]));
+	if (lexer->input[lexer->position] == 32)
+		return (create_token(str, str[0], 1));
+	return (create_token(str, str[0], 0));
 }
 
 t_token	*handle_word(t_lexer *lexer)
@@ -122,7 +128,9 @@ t_token	*handle_word(t_lexer *lexer)
 		lexer->position++;
 	lenght = lexer->position - start;
 	word = ft_substr(lexer->input, start, lenght);
-	return (create_token(word, word[0]));
+	if (lexer->input[lexer->position] == 32)
+		return (create_token(word, word[0], 1));
+	return (create_token(word, word[0], 0));
 }
 
 t_token	*get_next_token(t_lexer *lexer)
@@ -285,24 +293,40 @@ t_token *sub_left(t_token *token, t_token *opr)
 	return (head);
 }
 
-t_tree	*parse_something()
-{
+// t_tree	*parse_something()
+// {
 	
-}
+// }
 
 t_tree	*parse_paren(t_token *token)
 {
+	t_token *current;
 	t_token *tmp = token;
 	size_t	paren = 0;
 	if (tmp->type != 9)
-		return(parse_something());
-	paren++;
+		return NULL;
+		// return(parse_something());
 	while (tmp)
 	{
 		if (tmp->type == 9)
 			paren++;
-		else if (tmp->type )
+		else if (tmp->type == 10)
+			paren--;
+		if (paren == 0)
+		{
+			current = tmp;
+			break ;
+		}
+		tmp = tmp->next;
 	}
+	if (paren != 0)
+	{
+		printf("Syntax error: unmatched parenthesis\n");
+		return NULL;
+	}
+	t_token *sub_token = sub_left(token->next, current);
+	// print_linked_list(sub_token);
+	return(parse_op(sub_token));
 }
 
 t_tree	*parse_pipes(t_token *token)
@@ -319,13 +343,13 @@ t_tree	*parse_pipes(t_token *token)
 		// print_linked_list(left_token);
 		// printf("\n\n\n");
 		right_token = pipe->next;
-		print_linked_list(right_token);
+		// print_linked_list(right_token);
 		// printf("\n");
 		node->left = parse_pipes(left_token);
 		node->right = parse_pipes(right_token);
 		return (node);
 	}
-	return (NULL);
+	return (parse_paren(token));
 }
 
 t_tree	*parse_op(t_token *token)
@@ -339,11 +363,11 @@ t_tree	*parse_op(t_token *token)
 	{
 		t_tree *node = create_tree_node(token);
 		left_token = sub_left(tmp, opr);
-		print_linked_list(left_token);
-		printf("\n\n\n");
+		// print_linked_list(left_token);
+		// printf("\n\n\n");
 		right_token = opr->next;
-		print_linked_list(right_token);
-		printf("\n");
+		// print_linked_list(right_token);
+		// printf("\n");
 		node->left = parse_op(left_token);
 		node->right = parse_op(right_token);
 		return (node);
@@ -351,39 +375,39 @@ t_tree	*parse_op(t_token *token)
 	return (parse_pipes(token));
 }
 
-int	main(int argc, char **argv)
-{
-	char	*input;
-	t_lexer	*lexer;
-	t_token	*token;
-	t_token *token_list = NULL;
-	// t_tree	*node = NULL;
+// int	main(int argc, char **argv)
+// {
+// 	char	*input;
+// 	t_lexer	*lexer;
+// 	t_token	*token;
+// 	t_token *token_list = NULL;
+// 	// t_tree	*node = NULL;
 
-	(void)argc;
-	(void)argv;
-	while (1)
-	{
-		input = readline("minishell> ");
-		lexer = initialize_lexer(input);
-		token_list = NULL;
-		while (lexer->position < lexer->lenght)
-		{
-			token = get_next_token(lexer);
-			if (!token)
-				continue;
-			// if (token->type != 3 && token->type != 4)
-			token->type = token_type(token);
-			append_token(&token_list, token);
-			// node = create_tree_node(token_list);
-			// printf("token->value = %s			token->type = %d\n", token->value, token->type);
-		}
-		parse_op(token_list);
-		// t_token *current = token_list;
-		// while (current)
-		// {
-		// 	printf("token->value = %s		token->type = %d\n", current->value, current->type);
-		// 	current = current->next;
-		// }
-	}
-	return (0);
-}
+// 	(void)argc;
+// 	(void)argv;
+// 	while (1)
+// 	{
+// 		input = readline("minishell> ");
+// 		lexer = initialize_lexer(input);
+// 		token_list = NULL;
+// 		while (lexer->position < lexer->lenght)
+// 		{
+// 			token = get_next_token(lexer);
+// 			if (!token)
+// 				continue;
+// 			// if (token->type != 3 && token->type != 4)
+// 			token->type = token_type(token);
+// 			append_token(&token_list, token);
+// 			// node = create_tree_node(token_list);
+// 			// printf("token->value = %s			token->type = %d\n", token->value, token->type);
+// 		}
+// 		parse_op(token_list);
+// 		// t_token *current = token_list;
+// 		// while (current)
+// 		// {
+// 		// 	printf("token->value = %s		token->type = %d\n", current->value, current->type);
+// 		// 	current = current->next;
+// 		// }
+// 	}
+// 	return (0);
+// }

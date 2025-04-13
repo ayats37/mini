@@ -123,22 +123,22 @@ char *get_env_value(char *name, t_env *env_list)
     return(NULL);
 }
 
-int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist)
+int execute_builtin(t_token *token, t_env **envlist)
 {
     if (strcmp(token->value, "echo") == 0)
-        ft_echo(lexer, *envlist);
+        return(ft_echo(token, *envlist));
     else if (strcmp(token->value, "cd") == 0)
-        return(ft_cd(token, lexer));
+        return(ft_cd(token));
     else if (strcmp(token->value, "pwd") == 0)
         return(ft_pwd());
     else if (strcmp(token->value, "export") == 0)
-        return(ft_export(token, lexer, envlist));
+        return(ft_export(token, envlist));
     else if (strcmp(token->value, "unset") == 0)
-        return(ft_unset(lexer, envlist));
+        return(ft_unset(token, envlist));
     else if (strcmp(token->value, "env") == 0)
         return(ft_env(*envlist));
     else if (strcmp(token->value, "exit") == 0)
-        return(ft_exit(lexer, *envlist));
+        return(ft_exit(token, *envlist));
     return (0);
 }
 
