@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/13 18:35:55 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 19:20:49 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,10 @@ t_token	*get_next_token(t_lexer *lexer);
 int	cmd_type(t_token *token, int first_cmd);
 t_type	token_type(t_token *token);
 t_precedence precedence_type(t_token *token);
+t_token	*get_next_token(t_lexer *lexer);
+void	skip_whitespace(t_lexer *lexer);
+t_token	*handle_quote(t_lexer *lexer, char quote);
+;
 //***************************************exec**********************************************
 void update_env(char *name, char *value, t_env **env_list);
 char *get_env_value(char *name, t_env *env_list);

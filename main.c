@@ -79,6 +79,8 @@ int	main(int argc, char **argv)
 	char	*input;
 	t_lexer	*lexer;
 	t_token	*token;
+    t_token *head = NULL;
+    t_token *current = NULL;
     int count = 0;
     // int status;
     signal(SIGQUIT, SIG_IGN);
@@ -109,6 +111,13 @@ int	main(int argc, char **argv)
                 if (!token->value)
                     return (0);
                 token->type = token_type(token);
+                if (head == NULL) {
+                    head = token;
+                    current = head;
+                } else {
+                    current->next = token; 
+                    current = current->next;
+                }
                 // execute_builtin(token, lexer, &envlist);
             }
             count = calculate_cmd_nbr(token);
