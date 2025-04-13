@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ouel-afi <ouel-afi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/12 11:40:54 by ouel-afi         ###   ########.fr       */
+/*   Updated: 2025/04/13 14:12:49 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,15 @@ t_env *init_env(char **env);
 t_env *create_env_node(char *env_var);
 void add_to_env_list(t_env **head, t_env *new_node);
 t_env *init_env(char **envp);
-
+int handle_variable(char *str, t_env *env_list);
+int ft_echo(t_lexer *lexer, t_env *env_list);
+int ft_pwd();
+int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list);
+int ft_unset(t_lexer *lexer, t_env **env_list);
+int ft_exit(t_lexer *lexer, t_env *env_list);
+int ft_env(t_env *env_list);
+int ft_export(t_token *input, t_lexer *lexer, t_env **env_list);
+int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist);
+int handle_variable(char *str, t_env *env_list);
+int  is_alphanumeric(int c);
 #endif
