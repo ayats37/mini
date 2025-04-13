@@ -18,7 +18,7 @@ void last_cmd(t_data *data, int pipe_fd[][2])
 	dup2(pipe_fd[data->i - 1][0], STDIN_FILENO);
 }
 
-void	execute_cmd(t_data *data, char *input)
+void	execute_cmd(t_data *data, t_lexer *lexer,t_token *token)
 {
 	char *cmd_path;
 	char **cmd_args;
@@ -40,23 +40,21 @@ void	execute_cmd(t_data *data, char *input)
 	exit(1);
 }
 
-void child(t_data *data, int pipe_fd[][2], char *input)
+void child(t_data *data, int pipe_fd[][2], )
 {
     int j = 0;
 
     if (data->i == 0)
         first_cmd(data, pipe_fd);
-	// printf("input = %s\n", input);
     else if (data->i < data->cmd_nbrs - 1)
 			last_cmd(data, pipe_fd);
     else
 			middle_cmd(data, pipe_fd); 
-    
     while (j < data->cmd_nbrs - 1)
     {
         close(pipe_fd[j][0]);
         close(pipe_fd[j][1]);
         j++;
     }
-    execute_cmd(data, input);
+    execute_cmd(data, );
 }

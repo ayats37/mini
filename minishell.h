@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/13 17:16:25 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 18:35:55 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,4 +128,5 @@ int ft_export(t_token *input, t_lexer *lexer, t_env **env_list);
 int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist);
 int handle_variable(char *str, t_env *env_list);
 int  is_alphanumeric(int c);
+int calculate_cmd_nbr(t_token *token);
 #endif

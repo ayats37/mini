@@ -10,70 +10,21 @@ void write_split(char **split)
 	}
 }
 
-char **find_path(char **env)
-{
-	int i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], "PATH=", 5) == 0)
-			return(ft_split(env[i] + 5, ':'));
-		i++;
-	}
-	return NULL;
-}
-
-char *check_path(char **env, char *cmd) 
-{
-    if ((cmd[0] == '.' && cmd[1] == '/') || cmd[0] == '/')
-	{
-        if (access(cmd, F_OK | X_OK) == 0)
-            return ft_strdup(cmd);
-        return NULL;
-    }
-    char **path = find_path(env);
-    int i = 0;
-    char *full_path;
-
-    while (path && path[i])
-	{
-        path[i] = ft_strjoin(path[i], "/");
-        full_path = ft_strjoin(path[i], cmd);
-        if (access(full_path, F_OK | X_OK) == 0) 
-            return ft_strdup(full_path);
-
-        i++;
-    }
-    
-    return NULL;
-}
-
-void	handler(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-int calculate_cmd_nbr(char *input)
+int calculate_cmd_nbr(t_token *token)
 {
     int count = 1; 
-    int i = 0;
     
-    while (input[i])
+    while (token)
     {
-		if (input[i] == '|' && input[i+1] == '|')
-		{
-			count++;
-			i++;
-		}
-        else if (input[i] == '|')
-            count++;
-        i++;
+        while(token->value)
+        {
+            if(token->type == 1)
+                count++;
+        }
     }
-    return count;
+    return (count);
 }
+
 
 void execute_one(char *input, t_data *data)
 {
