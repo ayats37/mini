@@ -128,7 +128,7 @@ int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist)
     if (strcmp(token->value, "echo") == 0)
         ft_echo(lexer, *envlist);
     else if (strcmp(token->value, "cd") == 0)
-        return(ft_cd(token, lexer, *envlist));
+        return(ft_cd(token, lexer));
     else if (strcmp(token->value, "pwd") == 0)
         return(ft_pwd());
     else if (strcmp(token->value, "export") == 0)
@@ -142,32 +142,4 @@ int execute_builtin(t_token *token, t_lexer *lexer, t_env **envlist)
     return (0);
 }
 
-int	main(int argc, char **argv, char **env)
-{
-	char	*input;
-	t_lexer	*lexer;
-	t_token	*token;
-    t_env *envlist = init_env(env);
 
-	(void)argc;
-	(void)argv;
-	while (1)
-	{
-		input = readline("minishell> ");
-        if (input)
-        {
-            add_history(input); 
-            lexer = initialize_lexer(input);
-            while (lexer->position < lexer->lenght)
-            {
-                token = get_next_token(lexer);
-                if (!token->value)
-                    return (0);
-                token->type = token_type(token);
-                execute_builtin(token, lexer, &envlist);
-            }
-            free(input);
-        }
-	}
-	return (0);
-}

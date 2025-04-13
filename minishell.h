@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
+/*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/13 14:12:49 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 17:16:25 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ t_env *init_env(char **envp);
 int handle_variable(char *str, t_env *env_list);
 int ft_echo(t_lexer *lexer, t_env *env_list);
 int ft_pwd();
-int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list);
+int ft_cd(t_token *path, t_lexer *lexer);
 int ft_unset(t_lexer *lexer, t_env **env_list);
 int ft_exit(t_lexer *lexer, t_env *env_list);
 int ft_env(t_env *env_list);

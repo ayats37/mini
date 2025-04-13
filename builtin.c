@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
+/*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/13 14:04:43 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/13 17:30:58 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ int ft_export(t_token *input, t_lexer *lexer, t_env **env_list)
    char *equal_sign;
    char *name;
    char *value;
+   
    input = get_next_token(lexer);
-
    if (!input || !input->value)
     return(1);
    equal_sign = ft_strchr(input->value, '=');
@@ -74,8 +74,9 @@ int ft_export(t_token *input, t_lexer *lexer, t_env **env_list)
 }
 int ft_env(t_env *env_list)
 {
-    t_env *current = env_list;
+    t_env *current;
     
+    current = env_list;
     while(current)
     {
         printf("%s=%s\n", current->name, current->value);
@@ -87,9 +88,11 @@ int ft_env(t_env *env_list)
 int ft_exit(t_lexer *lexer, t_env *env_list)
 {
     t_token *arg;
-    int exit_status = 0;
-    t_env *current = env_list;
+    int exit_status;
+    t_env *current;
     
+    current = env_list;
+    exit_status = 0;
     arg = get_next_token(lexer);
     if (arg)
         exit_status = atoi(arg->value);
@@ -106,13 +109,14 @@ int ft_exit(t_lexer *lexer, t_env *env_list)
     exit(exit_status);
     return (0);
 }
+
 int ft_unset(t_lexer *lexer, t_env **env_list)
 {
     t_token *var;
     t_env *current = *env_list;
     t_env *prev = NULL;
-    var = get_next_token(lexer);
 
+    var = get_next_token(lexer);
     if (!var || !var->value)
         return (1);
     while(current)
@@ -134,20 +138,14 @@ int ft_unset(t_lexer *lexer, t_env **env_list)
     return(1);
 }
 
-int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list)
+int ft_cd(t_token *path, t_lexer *lexer)
 {
-    path = get_next_token(lexer);
+    char *home_dir;
     
+    path = get_next_token(lexer);
     if (!path)
     {
-        char *home_dir = get_env_value("HOME", env_list);
-        if (!home_dir || !*home_dir)
-            home_dir = getenv("HOME");
-        if (!home_dir || !*home_dir)
-        {
-            printf("cd: HOME not set\n");
-            return (1);
-        }
+        home_dir = getenv("HOME");
         if (chdir(home_dir) != 0)
         {
             printf("cd: %s: No such file or directory\n", home_dir);
@@ -161,8 +159,7 @@ int ft_cd(t_token *path, t_lexer *lexer, t_env *env_list)
             printf("cd: %s: No such file or directory\n", path->value);
             return (1);
         }
-    }
-    
+    }   
     return (0);
 }
 
