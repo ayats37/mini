@@ -1,5 +1,18 @@
 #include"minishell.h"
 
+char	**split_cmd(char *cmd)
+{
+	char	**command;
+
+	command = ft_split(cmd, ' ');
+	if (!command)
+	{
+		perror("split failed");
+		return (NULL);
+	}
+	return (command);
+}
+
 char	*get_path(char **env)
 {
 	int	i;
@@ -66,4 +79,24 @@ char	*check_paths(char **paths, char *cmd)
 		i++;
 	}
 	return (NULL);
+}
+char	*find_cmd_path(char *cmd, char **env)
+{
+	char	**command;
+	char	**paths;
+	char	*result;
+
+	command = split_cmd(cmd);
+	if (!command)
+		return (NULL);
+	paths = get_paths(env);
+	if (!paths)
+	{
+		ft_free_arr(command);
+		return (NULL);
+	}
+	result = check_paths(paths, command[0]);
+	ft_free_arr(paths);
+	ft_free_arr(command);
+	return (result);
 }
