@@ -98,7 +98,7 @@ int execute_pipe(t_tree *node, t_env *env)
     waitpid(pid1, &status1, 0);
     waitpid(pid2, &status2, 0);
     
-    return WEXITSTATUS(status2);
+    return (WEXITSTATUS(status2));
 }
 
 int handle_redirection(t_tree *node)
@@ -130,7 +130,9 @@ int handle_redirection(t_tree *node)
 
 int execute_tree(t_tree *node, t_env *env)
 {
-    int status =  0;
+    int status;
+
+    status = 0;
     if (node->type == CMD)
     {
         if (is_builtin(node->cmd))
