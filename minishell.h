@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/15 00:46:54 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/15 01:53:15 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,6 @@ int  is_alphanumeric(int c);
 char	*find_cmd_path(char *cmd, char **env);
 char	**split_cmd(char *cmd);
 char	**ft_split(char const *s, char c);
-int execute_tree(t_tree *node, t_env *env);
+int execute_tree(t_tree *node, char **env);
 
 #endif

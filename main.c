@@ -16,12 +16,10 @@ int	main(int argc, char **argv, char **env)
     (void)argc;
     (void)argv;
     t_token *token_list = NULL;
-    // int pipe_fd[MAX_PIPES][2];
-    // t_data data;
 	char	*input;
 	t_lexer	*lexer;
 	t_token	*token;
-    // int status;
+    t_tree *node;
     signal(SIGQUIT, SIG_IGN);
     signal(SIGINT, handler);
     t_env *envlist = init_env(env);
@@ -53,7 +51,7 @@ int	main(int argc, char **argv, char **env)
                 token->type = token_type(token);
                 append_token(&token_list, token);
             }
-            execute_builtin(token_list, &envlist);
+            execute_tree(node, env);
             parse_op(token_list);
             free(input);
         }

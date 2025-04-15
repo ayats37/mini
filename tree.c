@@ -49,21 +49,19 @@ int execute_cmds(char **cmds, char **env)
     {
         full_path = find_cmd_path(env, cmds[0]);
         if (!full_path)
-        {
-            free(full_path);
             write_error("command not found");
-        }
         execve(full_path, cmds, env);
+        free(full_path);
         write_error("execve failed");
     }
     else
     {
         waitpid(pid, &status, 0);
-        return WEXITSTATUS(status);
+        return (WEXITSTATUS(status));
     }
     return (0);
 }
-int execute_pipe(t_tree *node, t_env *env)
+int execute_pipe(t_tree *node, char **env)
 {
     pid_t pid1;
     pid_t pid2;
@@ -71,6 +69,8 @@ int execute_pipe(t_tree *node, t_env *env)
     int status2;
     int pipe_fd[2];
 
+    if (pipe(pipe_fd) == -1)
+        write_error("pipe failed");
     pid1 = fork();
     if (pid1 == -1)
         write_error("fork failed");
@@ -137,7 +137,7 @@ int execute_tree(t_tree *node, char **env)
     status = 0;
     if (node->type == CMD)
     {
-        if (is_builtin(node->cmd))
+        if (is_builtin(node->cmd[0]))
             return (execute_builtin(token, envlist));
         else
             return (execute_cmds(node->cmd, env));
@@ -146,7 +146,9 @@ int execute_tree(t_tree *node, char **env)
         return (execute_pipe(node, env));
     else if (node->type == REDIR_IN || node->type == REDIR_OUT || node->type == APPEND || node->type == HEREDOC)
      {
-        handle_redirection(node);
+        status = handle_redirection(node);
+        if (status != 0)
+            return (status);
         return (execute_tree(node->left, env));
      } 
      else if (node->type == AND || node->type == OR)
@@ -158,4 +160,5 @@ int execute_tree(t_tree *node, char **env)
             return (execute_tree(node->right, env));
         return (status);
      }
+     return (1);
 }
