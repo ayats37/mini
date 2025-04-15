@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/14 00:57:03 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/15 01:22:24 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,9 +141,7 @@ int ft_cd(t_token *token)
 {
     t_token *path = token;
     char *home_dir;
-    // (void)lexer;
     
-    // path = get_next_token(lexer);
     path = path->next;
     if (!path)
     {

@@ -128,20 +128,22 @@ int handle_redirection(t_tree *node)
     return (0);
 }
 
-int execute_tree(t_tree *node, t_env *env)
+int execute_tree(t_tree *node, char **env)
 {
     int status;
+    t_token *token;
+    t_env *envlist;
 
     status = 0;
     if (node->type == CMD)
     {
         if (is_builtin(node->cmd))
-            return (execute_builtin());
+            return (execute_builtin(token, envlist));
         else
             return (execute_cmds(node->cmd, env));
     }
     else if (node->type == PIPE)
-        return (execute_pipe());
+        return (execute_pipe(node, env));
     else if (node->type == REDIR_IN || node->type == REDIR_OUT || node->type == APPEND || node->type == HEREDOC)
      {
         handle_redirection(node);
