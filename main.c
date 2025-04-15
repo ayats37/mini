@@ -19,7 +19,7 @@ int	main(int argc, char **argv, char **env)
 	char	*input;
 	t_lexer	*lexer;
 	t_token	*token;
-    t_tree *node;
+    // t_tree *node;
     signal(SIGQUIT, SIG_IGN);
     signal(SIGINT, handler);
     t_env *envlist = init_env(env);
@@ -51,8 +51,8 @@ int	main(int argc, char **argv, char **env)
                 token->type = token_type(token);
                 append_token(&token_list, token);
             }
-            execute_tree(node, env);
             parse_op(token_list);
+            execute_builtin(token_list, &envlist);
             free(input);
         }
 	}

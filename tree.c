@@ -13,24 +13,24 @@ int is_builtin(char *cmd)
         || !strcmp(cmd, "pwd"));
 }
 
-int execute_builtin(t_token *token, t_env **envlist)
-{
-    if (strcmp(token->value, "echo") == 0)
-        return(ft_echo(token, *envlist));
-    else if (strcmp(token->value, "cd") == 0)
-        return(ft_cd(token));
-    else if (strcmp(token->value, "pwd") == 0)
-        return(ft_pwd());
-    else if (strcmp(token->value, "export") == 0)
-        return(ft_export(token, envlist));
-    else if (strcmp(token->value, "unset") == 0)
-        return(ft_unset(token, envlist));
-    else if (strcmp(token->value, "env") == 0)
-        return(ft_env(*envlist));
-    else if (strcmp(token->value, "exit") == 0)
-        return(ft_exit(token, *envlist));
-    return (0);
-}
+// int execute_builtin(t_token *token, t_env **envlist)
+// {
+//     if (strcmp(token->value, "echo") == 0)
+//         return(ft_echo(token, *envlist));
+//     else if (strcmp(token->value, "cd") == 0)
+//         return(ft_cd(token));
+//     else if (strcmp(token->value, "pwd") == 0)
+//         return(ft_pwd());
+//     else if (strcmp(token->value, "export") == 0)
+//         return(ft_export(token, envlist));
+//     else if (strcmp(token->value, "unset") == 0)
+//         return(ft_unset(token, envlist));
+//     else if (strcmp(token->value, "env") == 0)
+//         return(ft_env(*envlist));
+//     else if (strcmp(token->value, "exit") == 0)
+//         return(ft_exit(token, *envlist));
+//     return (0);
+// }
 void write_error(char *message)
 {
     perror(message);

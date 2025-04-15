@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/15 01:22:24 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/15 02:24:37 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int ft_echo(t_token *token_list, t_env *env_list)
                 i++;
             }
         }
-        token = token->next;
         if (token->has_space == 1)
             printf(" ");
+        token = token->next;
     }
     if (new_line)
         printf("\n");
