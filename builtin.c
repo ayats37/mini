@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/16 11:25:48 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/16 15:08:02 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,14 @@ int ft_cd(t_token *token)
     t_token *path = token;
     char *home_dir;
     
-    path = path->next;
-    if (!path)
+    if ((path->next && !strcmp(path->next->value, "~")) || !path || !path->next)
     {
         home_dir = getenv("HOME");
+        if (!home_dir)
+        {
+            printf("minishell: cd: %s: No such file or directory\n", home_dir);
+            return (1);
+        }
         if (chdir(home_dir) != 0)
         {
             printf("minishell: cd: %s: No such file or directory\n", home_dir);
@@ -154,9 +158,10 @@ int ft_cd(t_token *token)
     }
     else
     {
+        path = path->next;
         if (chdir(path->value) != 0)
         {
-            printf("cd: %s: No such file or directory\n", path->value);
+            printf("minishell: cd: %s: No such file or directory\n", path->value);
             return (1);
         }
     }   

@@ -117,11 +117,11 @@ int execute_tree(t_tree *node, char **env)
     char *cmd[] = {"ls", NULL};
 
     status = 0;
-    if (!node)
-    {
-        write(1, "eegrg\n", 7);
-        return (1);
-    }
+    // if (!node)
+    // {
+    //     write(1, "eegrg\n", 7);
+    //     return (1);
+    // }
     if (node->type == CMD)
     {
         if (is_builtin(cmd[0]))
