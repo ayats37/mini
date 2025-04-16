@@ -126,21 +126,21 @@ int execute_tree(t_tree *node, char **env)
     }
     else if (node->type == PIPE)
         return (execute_pipe(node, env));
-    else if (node->type == REDIR_IN || node->type == REDIR_OUT || node->type == APPEND || node->type == HEREDOC)
-     {
-        status = handle_redirection(node);
-        if (status != 0)
-            return (status);
-        return (execute_tree(node->left, env));
-     } 
-     else if (node->type == AND || node->type == OR)
-     {
-        status = execute_tree(node->left, env);
-        if (node->type == AND && status == 0)
-            return (execute_tree(node->right, env));
-        if (node->type == OR && status != 0)
-            return (execute_tree(node->right, env));
-        return (status);
-     }
+    // else if (node->type == REDIR_IN || node->type == REDIR_OUT || node->type == APPEND || node->type == HEREDOC)
+    //  {
+    //     status = handle_redirection(node);
+    //     if (status != 0)
+    //         return (status);
+    //     return (execute_tree(node->left, env));
+    //  } 
+    //  else if (node->type == AND || node->type == OR)
+    //  {
+    //     status = execute_tree(node->left, env);
+    //     if (node->type == AND && status == 0)
+    //         return (execute_tree(node->right, env));
+    //     if (node->type == OR && status != 0)
+    //         return (execute_tree(node->right, env));
+    //     return (status);
+    //  }
      return (1);
 }

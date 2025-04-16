@@ -1,4 +1,4 @@
-#include"minishell.h"
+#include "minishell.h"
 
 char	**split_cmd(char *cmd)
 {
@@ -15,9 +15,8 @@ char	**split_cmd(char *cmd)
 
 char	*get_path(char **env)
 {
-	int	i;
+	int	i = 0;
 
-	i = 0;
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
@@ -26,6 +25,7 @@ char	*get_path(char **env)
 	}
 	return (NULL);
 }
+
 char	**get_paths(char **env)
 {
 	char	*path_string;
@@ -45,21 +45,21 @@ char	**get_paths(char **env)
 
 char	*build_path(char *path, char *cmd)
 {
+	char	*tmp;
 	char	*full_path;
 
-	full_path = malloc(ft_strlen(path) + ft_strlen(cmd) + 2);
-	if (!full_path)
+	tmp = ft_strjoin(path, "/");
+	if (!tmp)
 		return (NULL);
-	ft_strjoin(full_path, path);
-	ft_strjoin(full_path, "/");
-	ft_strjoin(full_path, cmd);
+	full_path = ft_strjoin(tmp, cmd);
+	free(tmp);
 	return (full_path);
 }
 
 char	*check_paths(char **paths, char *cmd)
 {
 	char	*full_path;
-	int		i;
+	int		i = 0;
 
 	if ((cmd[0] == '.' && cmd[1] == '/') || cmd[0] == '/')
 	{
@@ -67,7 +67,6 @@ char	*check_paths(char **paths, char *cmd)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
-	i = 0;
 	while (paths[i])
 	{
 		full_path = build_path(paths[i], cmd);
@@ -80,6 +79,17 @@ char	*check_paths(char **paths, char *cmd)
 	}
 	return (NULL);
 }
+
+void	ft_free_arr(char **arr)
+{
+	int	i = 0;
+	if (!arr)
+		return;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
 char	*find_cmd_path(char *cmd, char **env)
 {
 	char	**command;
@@ -92,11 +102,35 @@ char	*find_cmd_path(char *cmd, char **env)
 	paths = get_paths(env);
 	if (!paths)
 	{
-		// ft_free_arr(command);
+		ft_free_arr(command);
 		return (NULL);
 	}
 	result = check_paths(paths, command[0]);
-	// ft_free_arr(paths);
-	// ft_free_arr(command);
+	ft_free_arr(paths);
+	ft_free_arr(command);
 	return (result);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	char *tmp = "ls";
+	char *full_path = find_cmd_path(tmp, env);
+
+	if (!full_path)
+	{
+		perror("command not found");
+		return (1);
+	}
+
+	printf("Trying to exec: %s\n", full_path); // optional for debug
+
+	if (execve(full_path, &tmp, env) == -1)
+	{
+		perror("execve failed");
+		free(full_path);
+		return (1);
+	}
+
+	free(full_path); // will never reach here if execve succeeds
+	return (0);
 }

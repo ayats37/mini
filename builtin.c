@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
+/*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/15 02:24:37 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/16 11:25:48 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int ft_echo(t_token *token_list, t_env *env_list)
 
     new_line = 1;
     token = token->next;
-    if (token && strcmp(token->value, "-n") == 0)
+    while (token && ft_strncmp(token->value, "-n", 2) == 0)
     {
         new_line = 0;
         token = token->next;
@@ -148,7 +148,7 @@ int ft_cd(t_token *token)
         home_dir = getenv("HOME");
         if (chdir(home_dir) != 0)
         {
-            printf("cd: %s: No such file or directory\n", home_dir);
+            printf("minishell: cd: %s: No such file or directory\n", home_dir);
             return (1);
         }
     }

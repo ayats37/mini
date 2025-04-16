@@ -1,0 +1,17 @@
+Makefile
+builtin.c
+builtin.o
+check_path.c
+exec.c
+exec.o
+libft
+main.c
+main.o
+minishell
+minishell.h
+t1
+t2
+t3
+test.c
+test.o
+tree.c
