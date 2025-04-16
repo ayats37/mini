@@ -45,14 +45,14 @@ char	**get_paths(char **env)
 
 char	*build_path(char *path, char *cmd)
 {
+	char	*tmp;
 	char	*full_path;
 
-	full_path = malloc(ft_strlen(path) + ft_strlen(cmd) + 2);
-	if (!full_path)
+	tmp = ft_strjoin(path, "/");
+	if (!tmp)
 		return (NULL);
-	ft_strjoin(full_path, path);
-	ft_strjoin(full_path, "/");
-	ft_strjoin(full_path, cmd);
+	full_path = ft_strjoin(tmp, cmd);
+	free(tmp);
 	return (full_path);
 }
 
