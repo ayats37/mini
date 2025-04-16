@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: taya <taya@student.fr>                     +#+  +:+       +#+        */
+/*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/15 01:53:15 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/16 12:56:18 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,9 @@ typedef struct s_tree {
 	t_type		type;
 	struct s_tree *left;
 	struct s_tree *right;
-	char **cmd;
-	char *file;
+	t_token *token;
+	// char **cmd;
+	// char *file;
 }	t_tree;
 
 typedef struct s_env
@@ -112,5 +113,8 @@ char	*find_cmd_path(char *cmd, char **env);
 char	**split_cmd(char *cmd);
 char	**ft_split(char const *s, char c);
 int execute_tree(t_tree *node, char **env);
+int execute_cmds(char **cmds, char **env);
+void write_error(char *message);
+int is_builtin(char *cmd);
 
 #endif
