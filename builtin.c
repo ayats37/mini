@@ -6,7 +6,7 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:09:19 by taya              #+#    #+#             */
-/*   Updated: 2025/04/16 15:08:02 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/16 16:13:18 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int ft_exit(t_token *token, t_env *env_list)
     
     current = env_list;
     exit_status = 0;
+
+    
     arg = arg->next;
     if (arg)
         exit_status = atoi(arg->value);

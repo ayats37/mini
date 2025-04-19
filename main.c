@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char **env)
     t_tree *node;
     signal(SIGQUIT, SIG_IGN);
     signal(SIGINT, handler);
-    t_env *envlist = init_env(env);
+    // t_env *envlist = init_env(env);
 
     rl_catch_signals = 0;
 	while (1)
@@ -52,10 +52,10 @@ int	main(int argc, char **argv, char **env)
                 append_token(&token_list, token);
             }
             node = parse_op(token_list);
-            // if (!node)
-            //     printf("error\n");
-            // execute_tree(node, env);
-            execute_builtin(token_list, &envlist);
+            if (!node)
+                printf("error\n");
+            execute_tree(node, env);
+            // execute_builtin(token_list, &envlist);
             free(input);
         }
 	}

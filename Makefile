@@ -37,7 +37,7 @@
 
 
 
-SRCS =  exec.c builtin.c main.c test.c 
+SRCS =  exec.c builtin.c main.c test.c check_path.c tree.c
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror

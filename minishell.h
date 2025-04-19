@@ -6,14 +6,14 @@
 /*   By: taya <taya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 12:58:09 by ouel-afi          #+#    #+#             */
-/*   Updated: 2025/04/16 12:56:18 by taya             ###   ########.fr       */
+/*   Updated: 2025/04/19 18:08:19 by taya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "./libft/libft.h"
+# include "./libft/libft.h"
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -21,56 +21,61 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <string.h>
 
-#define MAX_PIPES 1024
+# define MAX_PIPES 1024
+
+typedef struct s_data
+{
+	char	**env;
+	int		cmd_nbrs;	
+	int		i;
+}	t_data;
 
 typedef struct s_lexer {
-	int position;
-	int lenght;
-	char *input;
+	int		position;
+	int		lenght;
+	char	*input;
 }	t_lexer;
 
 typedef enum s_type {
-    CMD,
 	WORD,
 	PIPE,
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE,
-    REDIR_IN,
-    REDIR_OUT,
-    APPEND,
-    HEREDOC,
-    OPEN_PAREN,
-    CLOSE_PAREN,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HEREDOC,
+	OPEN_PAREN,
+	CLOSE_PAREN,
 	OR,
 	AND
-} t_type;
+}	t_type;
 
 typedef struct s_token {
-	char	*value;
-	t_type		type;
-	int			has_space;
-	struct s_token *next;
+	char			*value;
+	t_type			type;
+	int				has_space;
+	struct s_token	*next;
 }	t_token;
 
 typedef struct s_tree {
-	t_type		type;
-	struct s_tree *left;
-	struct s_tree *right;
-	t_token *token;
-	// char **cmd;
-	// char *file;
+	t_token *redir;
+	t_type type;
+	char *value;
+	struct s_tree	*left;
+	struct s_tree	*right;
 }	t_tree;
 
 typedef struct s_env
 {
-	char *name;
-	char *value;
-	struct s_env *next;
-	char **env;
+	char			*name;
+	char			*value;
+	struct s_env	*next;
+	char			**env;
 }	t_env;
 
 
